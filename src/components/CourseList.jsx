@@ -1,16 +1,27 @@
 import React from 'react';
-
-const Course = ({ course }) => (
-  <div>
-    { course.term } CS { course.number }: { course.title }
-  </div>
-);
+import './Courses.css';
 
 const CourseList = ({ courses }) => (
-  <div>
-    { Object.keys(courses).map(key => <Course key={key} course={courses[key]} />) }
+  <div className="course-list">
+    {Object.keys(courses).map(key => (
+      <div key={key} className="card m-1 p-2">
+        <div className="card-body">
+          <div className="card-content">
+            <h4 className="card-title">
+              {courses[key].term} CS {courses[key].number}
+            </h4>
+            <p className="card-text">
+              {courses[key].title}
+            </p>
+          </div>
+          <hr/>
+          <p>{courses[key].meets}</p>
+        </div>
+      </div>
+    ))}
   </div>
 );
+
 
 export default CourseList;
 

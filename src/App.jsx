@@ -1,7 +1,7 @@
 import React from 'react';
 import Banner from './components/Banner';
 import CourseList from './components/CourseList';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 const schedule = {
   "title": "CS Courses for 2018-2019",
   "courses": {
@@ -33,10 +33,10 @@ const schedule = {
 };
 
 const App = () => (
-  <div>
-    <Banner title={schedule.title} />
-    <CourseList courses={schedule.courses} />
-  </div>
+    <div className="container">
+      <Banner title={ schedule.title } />
+      <CourseList courses={ schedule.courses } />
+    </div>
 );
 
 export default App;
