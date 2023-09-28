@@ -3,6 +3,8 @@ import TermSelector from './TermSelector';
 import './Courses.css';
 import Modal from './Modal';
 import CoursePlan from './CoursePlan';
+import { Link } from 'react-router-dom';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const generateCourseId = (course) => {
   return `${course.term}-${course.number}-${course.meets.replace(/\s+/g, '-')}`;
@@ -21,19 +23,6 @@ const timeParts = meets => {
   };
 };
 
-const mapValues = (fn, obj) => (
-  Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, fn(value)]))
-);
-
-const addCourseTimes = course => ({
-  ...course,
-  ...timeParts(course.meets)
-});
-
-const addScheduleTimes = schedule => ({
-  title: schedule.title,
-  courses: mapValues(addCourseTimes, schedule.courses)
-});
 
 const days = ['M', 'Tu', 'W', 'Th', 'F'];
 
@@ -118,9 +107,16 @@ const Course = ({ course, selected, setSelected }) => {
         </div>
         <hr/>
         <p>{course.meets}</p>
-      </div>
+        
+        <Link to={`/edit/${generateCourseId(course)}`} className="btn btn-link">
+          <button type="button" className="btn btn-primary">
+            <i className="bi bi-pencil"></i>
+          Edit
+          </button>
+        </Link>
+        
     </div>
+  </div>
   );
 };
-
 export default CourseList;
