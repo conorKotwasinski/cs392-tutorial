@@ -8,9 +8,7 @@ const CoursePlan = ({ selected }) => (
   <div className="course-plan">
     {
       selected.length === 0 ?
-      <h2>The course plan is empty. 
-          Select courses by clicking the 
-          course card.</h2>
+      <h2>No courses selected. Click on a course card to add it to your plan.</h2>
       : selected.map(course => {
           const uniqueId = generateCourseId(course);
           return(
