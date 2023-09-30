@@ -5,6 +5,7 @@ import Modal from './Modal';
 import CoursePlan from './CoursePlan';
 import { Link } from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { signInWithGoogle, signOut, useAuthState } from '../utilities/firebase';
 
 const generateCourseId = (course) => {
   return `${course.term}-${course.number}-${course.meets.replace(/\s+/g, '-')}`;
@@ -49,6 +50,23 @@ const hasConflict = (course, selected) => (
   selected.some(selection => courseConflict(course, selection))
 );
 
+
+
+const SignInButton = () => (
+  <button className="ms-auto btn btn-dark" onClick={signInWithGoogle}>Sign in</button>
+);
+
+const SignOutButton = () => (
+  <button className="ms-auto btn btn-dark" onClick={signOut}>Sign out</button>
+);
+
+const AuthButton = () => {
+  const [user] = useAuthState();
+  return user ? <SignOutButton /> : <SignInButton />;
+};
+
+const activation = ({isActive}) => isActive ? 'active' : 'inactive';
+
 const CourseList = ({ courses }) => {
  const [term, setTerm] = useState('Fall');
  const [selected, setSelected] = useState([]);
@@ -67,9 +85,11 @@ const CourseList = ({ courses }) => {
     
     <div className="d-flex justify-content-between">
       <TermSelector term={term} setTerm={setTerm} />
+      
       <button className="ms-auto btn btn-outline-dark" onClick={openModal}>
         <i className="bi bi-cart4">Course Plan</i>
       </button>
+      <AuthButton />
     </div>
     
     <div className="course-list">
@@ -87,15 +107,16 @@ const toggle = (x, lst) => (
 );
 
 const Course = ({ course, selected, setSelected }) => {
+  const [user] = useAuthState();
   const isSelected = selected.includes(course);
   const isDisabled = !isSelected && hasConflict(course, selected);
   const style = {
-    backgroundColor: isDisabled? 'lightgrey' : isSelected ? 'lightgreen' : 'white'
+    backgroundColor: isDisabled ? 'lightgrey' : isSelected ? 'lightgreen' : 'white'
   };
   return (
     <div className="card m-1 p-2"
       style={style}
-      onClick={isDisabled ? null : () =>  setSelected(toggle(course, selected))}>
+      onClick={isDisabled ? null : () => setSelected(toggle(course, selected))}>
       <div className="card-body">
         <div className="card-content">
           <h4 className="card-title">
@@ -105,18 +126,22 @@ const Course = ({ course, selected, setSelected }) => {
             {course.title}
           </p>
         </div>
-        <hr/>
+        <hr />
         <p>{course.meets}</p>
-        
-        <Link to={`/edit/${generateCourseId(course)}`} className="btn btn-link">
-          <button type="button" className="btn btn-primary">
-            <i className="bi bi-pencil"></i>
-          Edit
-          </button>
-        </Link>
-        
+
+        {/* Conditionally show edit button for authenticated users */}
+        {user && (
+          <Link to={`/edit/${generateCourseId(course)}`} className="btn btn-link">
+            <button type="button" className="btn btn-primary">
+              <i className="bi bi-pencil"></i>
+              Edit
+            </button>
+          </Link>
+        )}
+
+      </div>
     </div>
-  </div>
   );
 };
+
 export default CourseList;
