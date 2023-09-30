@@ -3,7 +3,6 @@ import './Modal.css';
 // https://codebuckets.com/2021/08/08/bootstrap-modal-dialog-in-react-without-jquery/
 
 const Modal = ({ children, open, close }) => {
-    console.log("The current status is", open)
     return (
         <div
             className={`modal ${open ? 'modal-show' : ''}`}

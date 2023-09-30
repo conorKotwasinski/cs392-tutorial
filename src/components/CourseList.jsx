@@ -65,9 +65,7 @@ const AuthButton = () => {
   return user ? <SignOutButton /> : <SignInButton />;
 };
 
-const activation = ({isActive}) => isActive ? 'active' : 'inactive';
-
-const CourseList = ({ courses }) => {
+const CourseList = ({ courses, profile }) => {
  const [term, setTerm] = useState('Fall');
  const [selected, setSelected] = useState([]);
  const termCourses = Object.keys(courses)
@@ -95,7 +93,7 @@ const CourseList = ({ courses }) => {
     <div className="course-list">
       {termCourses.map(course => {
         const uniqueId = generateCourseId(course);
-        return <Course key={uniqueId} course={course} selected={selected} setSelected={setSelected} />;
+        return <Course key={uniqueId} course={course} selected={selected} setSelected={setSelected} profile={profile} />;
       })}
     </div>
   </>
@@ -106,8 +104,9 @@ const toggle = (x, lst) => (
   lst.includes(x) ? lst.filter(y => y !== x) : [x, ...lst]
 );
 
-const Course = ({ course, selected, setSelected }) => {
+const Course = ({ course, selected, setSelected, profile }) => {
   const [user] = useAuthState();
+
   const isSelected = selected.includes(course);
   const isDisabled = !isSelected && hasConflict(course, selected);
   const style = {
@@ -128,9 +127,7 @@ const Course = ({ course, selected, setSelected }) => {
         </div>
         <hr />
         <p>{course.meets}</p>
-
-        {/* Conditionally show edit button for authenticated users */}
-        {user && (
+        {profile?.isAdmin && (
           <Link to={`/edit/${generateCourseId(course)}`} className="btn btn-link">
             <button type="button" className="btn btn-primary">
               <i className="bi bi-pencil"></i>
