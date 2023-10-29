@@ -114,6 +114,7 @@ const Course = ({ course, selected, setSelected, profile }) => {
   };
   return (
     <div className="card m-1 p-2"
+      data-cy="course"
       style={style}
       onClick={isDisabled ? null : () => setSelected(toggle(course, selected))}>
       <div className="card-body">
